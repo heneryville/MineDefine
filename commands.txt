@@ -1,0 +1,2 @@
+Runner/bin/Debug/Runner.exe samples/basic.mdef C:\\Users\\mharris\\AppData\\Roaming\\.minecraft\\saves\\blah
+rm -rf C:\\Users\\mharris\\AppData\\Roaming\\.minecraft\\saves\\blah
