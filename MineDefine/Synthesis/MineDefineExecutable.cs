@@ -1,38 +1,40 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MineDefine.Lexer;
-using MineDefine.Parser;
 using MineDefine.Parser.AST;
-using MineDefine.Synthesis;
 using Substrate;
-using Substrate.Core;
 
-namespace MineDefine
+namespace MineDefine.Synthesis
 {
-    public class MineDefine
+    public class MineDefineExecutable
     {
+        private readonly MineDefineAST _ast;
+        private readonly ComplexElement _layout;
 
-        public void Build(Stream mineDefineInput, string worldName)
+        public MineDefineExecutable(MineDefineAST ast, ComplexElement layout)
         {
-            NbtWorld nbtWorld;
-            if (Directory.Exists(worldName)) nbtWorld = NbtWorld.Open(worldName);
-            else
-            {
-                Directory.CreateDirectory(worldName);
-                nbtWorld = AnvilWorld.Create(worldName);
-            }
-            var chunks = CreateWorld(nbtWorld);
+            _ast = ast;
+            _layout = layout;
+        }
 
-            var tokens = new MineDefineLexer(mineDefineInput).Lex();
-            var ast = new MineDefineParser(tokens).Parse();
-            ast = new StandaloneTransformSugar().Transform(ast);
-            var stamp = new WorldStamp(nbtWorld);
-            var synth = new Synthesizer(stamp);
-            synth.Place(ast,new Transform(0,0,9));
+        public int Width { get { return _layout.Width; } }
+        public int Depth { get { return _layout.Depth; } }
+        public int Height { get { return _layout.Height; } }
+
+        public void Place(IBlockStamp stamp, Transform transform)
+        {
+            _layout.Build(stamp, transform);
+        }
+
+        public void Create(string worldName)
+        {
+            Directory.Delete(worldName,true);
+            Directory.CreateDirectory(worldName);
+            var nbtWorld = AnvilWorld.Create(worldName);
+            Console.WriteLine("Clearing space");
+            var chunks = CreateWorld(nbtWorld);
+            Console.WriteLine("Building");
+            _layout.Build(new WorldStamp(nbtWorld), new Transform(0,0,8));
 
             foreach (var chunk in chunks)
             {
@@ -41,13 +43,11 @@ namespace MineDefine
                 chunk.Blocks.RebuildBlockLight();
                 chunk.Blocks.RebuildSkyLight();
             }
-
-            stamp.Save();
+            Console.WriteLine("Saving");
             nbtWorld.Save();
         }
 
-        
-        static void FlatChunk(ChunkRef chunk, int height)
+        private static void FlatChunk(ChunkRef chunk, int height)
         {
             // Create bedrock
             for (int y = 0; y < 2; y++)
@@ -58,6 +58,14 @@ namespace MineDefine
                     {
                         chunk.Blocks.SetID(x, y, z, (int)BlockType.BEDROCK);
                     }
+                }
+            }
+
+            for (int x = 0; x < 16; x++)
+            {
+                for (int z = 0; z < 16; z++)
+                {
+                    chunk.Biomes.SetBiome(x,z, BiomeType.Plains);
                 }
             }
 
@@ -101,10 +109,11 @@ namespace MineDefine
         private IEnumerable<ChunkRef> CreateWorld(NbtWorld world)
         {
             var cm = world.GetChunkManager();
-            int xmin = -4;
-            int xmax = 4;
-            int zmin = -4;
-            int zmaz = 4;
+            var radius = 10;
+            int xmin = -radius;
+            int xmax = radius;
+            int zmin = -radius;
+            int zmaz = radius;
 
             world.Level.AllowCommands = true;
             world.Level.LevelName = "MineDefined";
@@ -143,13 +152,12 @@ namespace MineDefine
                     // Set the blocks
                     FlatChunk(chunk, 8);
 
-                    Console.WriteLine("Built Chunk {0},{1}", chunk.X, chunk.Z);
+                    //Console.WriteLine("Built Chunk {0},{1}", chunk.X, chunk.Z);
 
                     // Save the chunk to disk so it doesn't hang around in RAM
                 }
             }
             return chunks;
         }
-
     }
 }

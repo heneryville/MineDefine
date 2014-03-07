@@ -4,7 +4,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using MineDefine.Lexer;
 using MineDefine.Parser.AST;
-using Tests.Parser.AST;
 
 namespace MineDefine.Parser
 {

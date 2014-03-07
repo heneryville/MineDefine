@@ -1,0 +1,45 @@
+@building: {
+
+  @chair: {
+    2x1 @cobblestone;
+    up @cobblestone;
+  }
+
+  @floor: {
+    10x10x1 @stone;
+    up;
+    4,5 @chair;
+    wall 10x10x4 @woodplank;
+    9,5,1 1x2x2 @glass;
+  }
+  @roof: 10x10x1 @stone;
+
+  @floor;
+  5,9,2 @air;
+  5,9,1 @door;
+  top;
+  1x1x6 @floor;
+  top @roof;
+  top box 1x1x3 @wood;
+}
+
+@plot: {
+  15x15x1 @grass;
+  5,10,0 1x5x1 @stone;
+  4,10,1 @rose;
+  6,10,1 @rose;
+  @building;
+}
+
+@axis: {
+  1x1x3 @cobblestone;
+  3x1x1 @woodplank;
+  1x3x1 @glass;
+}
+
+@axis;
+north 10;
+east 10;
+5x1x1 @plot;
+front;
+75x4x1 @stone;

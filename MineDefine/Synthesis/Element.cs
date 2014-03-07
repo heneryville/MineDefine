@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MineDefine.Parser.AST;
 using MineDefine.Synthesis.Shapes;
 using Substrate;
-using Tests.Synthesis.Shapes;
 using Dimension = MineDefine.Parser.AST.Dimension;
 
 namespace MineDefine.Synthesis

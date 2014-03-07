@@ -1,0 +1,47 @@
+graph minedefine_fsa {
+
+  start
+  semicolon [label=";"]
+  openbrace [label="{"]
+  closebrace [label="}"]
+  colon [label=":"]
+  negative [label="-"]
+  at [label="@"]
+
+  digit1 [label="0-9"]
+  digit2 [label="0-9"]
+  digit3 [label="0-9"]
+  digit4 [label="0-9"]
+  digit5 [label="0-9"]
+  digit6 [label="0-9"]
+  digit7 [label="0-9"]
+
+  atLetter [label="@[a-zA-Z]"]
+  atLetterSymbol [label="@[a-zA-Z][a-zA-Z0-9_\]"]
+
+  letter [label="[a-zA-Z]"]
+  letterSymbol [label="[a-zA-Z][a-zA-Z0-9_\]"]
+
+  start -> semicolon
+  start -> openbrace
+  start -> closebrace
+  start -> colon
+
+
+  # Dimensions. TODO: write the missed tracks to go to other stuff
+  start -> u -> up
+  start -> d -> do -> dow -> down
+  start -> n -> no -> nor -> nor -> nort -> north
+  start -> s -> so -> sou -> sout -> south
+  start -> w -> we -> wes -> west
+  start -> t -> to -> top
+  start -> b -> bo -> bot -> bott -> bottom
+  b -> ba -> bac -> back
+  start -> l -> le -> lef -> left
+  start -> r -> ri -> rig -> righ -> right
+  start -> f -> fr -> fro -> fron -> front
+
+  start -> at -> atLetter -> atLetterSymbol -> atLetterSymbol
+  start -> letter -> letterSymbol -> letterSymbol
+
+}

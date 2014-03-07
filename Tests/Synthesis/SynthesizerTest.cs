@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using MineDefine;
 using MineDefine.Lexer;
 using MineDefine.Parser;
 using MineDefine.Parser.AST;
@@ -25,13 +26,9 @@ namespace Tests.Synthesis
         [TestCase("@wood; top @wood;","0,0,0|0,0,1",2)]
         public void ItPlacesBlocksWhereExpected(string code, string assertions, int mass)
         {
-            var tokens = new MineDefineLexer(new MemoryStream(Encoding.UTF8.GetBytes(code))).Lex();
-            var ast = new MineDefineParser(tokens).Parse();
-            ast = new StandaloneTransformSugar().Transform(ast);
-
+            var exe = MineDefineCompiler.Compile(code);
             var fakeStamp = new FakeStamp();
-            var synthesizer = new Synthesizer(fakeStamp);
-            synthesizer.Place(ast, Transform.Identity);
+            exe.Place(fakeStamp,Transform.Identity);
 
             foreach (var assertion in assertions.Split('|').Select(Location.Parse))
             {

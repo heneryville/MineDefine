@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 
 namespace MineDefine.Synthesis
 {
@@ -19,7 +20,7 @@ namespace MineDefine.Synthesis
             {
                 if (elements.ContainsKey(name)) return elements[name];
                 if (Parent != null) return Parent[name];
-                return null;
+                throw new Exception("Unrecognized symbol: " + name);
             }
         }
 

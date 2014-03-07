@@ -6,26 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using MineDefine.Parser.AST;
 using Substrate;
-using Tests.Parser.AST;
 
 namespace MineDefine.Synthesis
 {
-    public class Synthesizer
+    public class MineDefineLayout
     {
-        private readonly IBlockStamp _stamp;
-
-        public Synthesizer(IBlockStamp stamp)
-        {
-            _stamp = stamp;
-        }
-
-        public void Place(MineDefineAST ast, Transform transform)
+        public ComplexElement Layout(MineDefineAST ast)
         {
             var symbolTable = DefaultSymbolsTable();
             var rootDef = new ComplexElement();
-
             Plan(ast.Statements, symbolTable, Transform.Identity, rootDef);
-            rootDef.Build(_stamp,transform);
+            return rootDef;
         }
 
         private void Plan(IEnumerable<IStatement> statements, SymbolTable symbolTable, Transform transform, ComplexElement def)
@@ -82,6 +73,12 @@ namespace MineDefine.Synthesis
                 new {name = "sandstone", type = BlockType.SANDSTONE},
                 new {name = "wool", type = BlockType.WOOL},
                 new {name = "cobblestone", type = BlockType.COBBLESTONE},
+                new {name = "door", type = BlockType.WOOD_DOOR},
+                new {name = "glass", type = BlockType.GLASS},
+                new {name = "glasspane", type = BlockType.GLASS_PANE},
+                new {name = "air", type = BlockType.AIR},
+                new {name = "rose", type = BlockType.RED_ROSE},
+                new {name = "grass", type = BlockType.GRASS},
             };
 
             return defs.Aggregate(SymbolTable.BaseSymbolTable,

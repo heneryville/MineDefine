@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using MineDefine.Parser.AST;
-using Tests.Synthesis.Shapes;
 
 namespace MineDefine.Synthesis.Shapes
 {
