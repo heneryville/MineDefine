@@ -1,0 +1,15 @@
+<prgm> ::= <statment>*
+<statement> ::= <definition> 
+		| <invocation>
+		| <transform>
+
+<definition> ::= identifier: <statement_block>
+<statement_block> ::= <statement>; | { <statement>* }
+
+<transform> ::= <trans_instructions> <statement_block> | <trans_instructions>;
+
+<trans_instructions> ::= <absoulte_trans> | <relative_trans>
+<absolute_trans> ::= (up|down|north|south|east|west) <integer>?
+<relative_trans> ::= (top|bottom|left|right|front|back)
+
+<invocation> ::= <shape>? <dimension>? <location>? identifier;

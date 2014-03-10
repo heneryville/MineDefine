@@ -1,26 +1,39 @@
-graph minedefine_fsa {
+digraph minedefine_fsa {
 
   start
-  semicolon [label=";"]
-  openbrace [label="{"]
-  closebrace [label="}"]
-  colon [label=":"]
+  semicolon [label=<; <br/> Emit "EndOfLine"> color="blue"]
+  openbrace [label=<{ <br/> Emit "Open Brace"> color="blue"]
+  closebrace [label=<} <br/> Emit "Close Brace"> color="blue"]
+  colon [label=<: <br/> Emit "Colon"> color="blue"]
   negative [label="-"]
   at [label="@"]
 
-  digit1 [label="0-9"]
-  digit2 [label="0-9"]
-  digit3 [label="0-9"]
-  digit4 [label="0-9"]
-  digit5 [label="0-9"]
-  digit6 [label="0-9"]
-  digit7 [label="0-9"]
+  atLetter [label=<@[a-zA-Z] <br/> Emit "Identifier"> color="blue"]
+  atLetterSymbol [label=<@[a-zA-Z][a-zA-Z0-9_\] <br/> Emit "Identifier"> color="blue"]
 
-  atLetter [label="@[a-zA-Z]"]
-  atLetterSymbol [label="@[a-zA-Z][a-zA-Z0-9_\]"]
+  letter [label=<[a-zA-Z] <br/> Emit "Operation"> color="blue"]
+  letterSymbol [label=<[a-zA-Z][a-zA-Z0-9_\] <br/> Emit "Operation"> color="blue"]
+  negatableNumeral [label=<-?[0-9]+ <br/> Emit "Numeral"> color="blue"]
+  nonNegatableNumeral [label=<[0-9]+ Emit "Numeral"> color="blue"]
+  numeralComma [label="(-?[0-9])+,"]
+  locationEndNeg [label="(-?[0-9])+,-"]
+  locationEndNumeral [label=<(-?[0-9])+,-?[0-9] <br/> Emit "Location"> color="blue"]
 
-  letter [label="[a-zA-Z]"]
-  letterSymbol [label="[a-zA-Z][a-zA-Z0-9_\]"]
+  numeralX [label="[0-9]+x"]
+  numeralXnumeral [label=<([0-9]+x)+[0-9]+ <br/> Emit "Dimension"> color="blue"]
+  numeralXnumeralX [label="([0-9]+x)+"]
+
+  up [ label=<up <br/> Emit "Up"> color="blue"]
+  down [label=<up <br/> Emit "Down"> color="blue"]
+  north [label=<up <br/> Emit "North"> color="blue"]
+  south [label=<up <br/> Emit "South"> color="blue"]
+  west [label=<up <br/> Emit "West"> color="blue"]
+  top [label=<up <br/> Emit "Top"> color="blue"]
+  bottom [label=<up <br/> Emit "Bottom"> color="blue"]
+  back [label=<up <br/> Emit "Back"> color="blue"]
+  left [label=<up <br/> Emit "Left"> color="blue"]
+  right [label=<up <br/> Emit "Right"> color="blue"]
+  front [label=<up <br/> Emit "Front"> color="blue"]
 
   start -> semicolon
   start -> openbrace
@@ -30,18 +43,63 @@ graph minedefine_fsa {
 
   # Dimensions. TODO: write the missed tracks to go to other stuff
   start -> u -> up
+  u -> letterSymbol
   start -> d -> do -> dow -> down
-  start -> n -> no -> nor -> nor -> nort -> north
+  d -> letterSymbol
+  do -> letterSymbol
+  dow -> letterSymbol
+  start -> n -> no -> nor -> nort -> north
+  n -> letterSymbol
+  no -> letterSymbol
+  nor -> letterSymbol
+  nort -> letterSymbol
   start -> s -> so -> sou -> sout -> south
+  s -> letterSymbol
+  so -> letterSymbol
+  sou -> letterSymbol
+  sout -> letterSymbol
+  south -> letterSymbol
   start -> w -> we -> wes -> west
+  w -> letterSymbol
+  we -> letterSymbol
+  wes -> letterSymbol
   start -> t -> to -> top
-  start -> b -> bo -> bot -> bott -> bottom
+  t -> letterSymbol
+  to -> letterSymbol
+  start -> b -> bo -> bot -> bott -> botto -> bottom
+  b -> letterSymbol
+  bo -> letterSymbol
+  bot -> letterSymbol
+  bott -> letterSymbol
+  botto -> letterSymbol
   b -> ba -> bac -> back
+  ba -> letterSymbol
+  bac -> letterSymbol
+  bac -> letterSymbol
   start -> l -> le -> lef -> left
+  l -> letterSymbol
+  le -> letterSymbol
+  lef -> letterSymbol
   start -> r -> ri -> rig -> righ -> right
+  r -> letterSymbol
+  ri -> letterSymbol
+  rig -> letterSymbol
+  righ -> letterSymbol
   start -> f -> fr -> fro -> fron -> front
+  f -> letterSymbol
+  fr -> letterSymbol
+  fro -> letterSymbol
+  fron -> letterSymbol
 
   start -> at -> atLetter -> atLetterSymbol -> atLetterSymbol
   start -> letter -> letterSymbol -> letterSymbol
 
+  start -> negative -> negatableNumeral -> negatableNumeral ->  numeralComma -> locationEndNeg
+  locationEndNeg -> locationEndNumeral
+  numeralComma -> locationEndNumeral -> locationEndNumeral
+  start -> nonNegatableNumeral -> nonNegatableNumeral -> numeralX -> numeralXnumeral -> numeralXnumeral
+  numeralXnumeral -> numeralXnumeralX -> numeralXnumeral
+  nonNegatableNumeral -> numeralComma
+
+  start -> whitespace -> start
 }
