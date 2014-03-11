@@ -38,7 +38,7 @@ Right right
 Front front
 Back back
 
-// Terminals
+// Dynamic tokens
 Dimension ([0-9]+x)+[0-9]+
 Location (-?[0-9]+,)+-?[0-9]+
 Identifier		@[a-zA-Z]([a-zA-Z0-9_\-])*
@@ -80,7 +80,7 @@ Unknown [^\s]
 {Front}	{ return (int) TokenKind.Front; }
 {Back}	{ return (int) TokenKind.Back; }
 
-//Terminals
+// Dynamics
 {Numeral}	{ return (int) TokenKind.Numeral; }
 {Dimension}	{ return (int) TokenKind.Dimension; }
 {Location}				{ return (int) TokenKind.Location; }
