@@ -34,5 +34,10 @@ namespace MineDefine.Parser.AST
             ints.AddRange(Enumerable.Range(0,3 - ints.Count).Select(x => 1));
             return new Dimension(ints[0], ints[1], ints[2]);
         }
+
+        public override string ToString()
+        {
+            return "" + Width + "x" + Depth + "x" + Height;
+        }
     }
 }

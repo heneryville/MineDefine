@@ -1,0 +1,14 @@
+To Open:
+Minecraft
+jsparse.meteor.com
+Console to minedefine root w/ build command in history
+Code at zoom:
+	Lex token
+	TokenKind
+	MineDefine.Lex
+	RawLexer
+	MineDefineLexer
+	MinedefineParser
+	StandaloneTransformSugar
+	MineDefineLayout
+	Element

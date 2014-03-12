@@ -20,11 +20,8 @@ namespace MineDefine.Lexer
         Numeral,
         Identifier,
         Operation,
-        Stack,
-        Count,
         Dimension,
         Location,
-
     }
 
     public static class TokenKindExtensions

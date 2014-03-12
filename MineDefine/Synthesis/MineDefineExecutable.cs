@@ -28,7 +28,7 @@ namespace MineDefine.Synthesis
 
         public void Create(string worldName)
         {
-            Directory.Delete(worldName,true);
+            if(Directory.Exists(worldName)) Directory.Delete(worldName,true);
             Directory.CreateDirectory(worldName);
             var nbtWorld = AnvilWorld.Create(worldName);
             Console.WriteLine("Clearing space");

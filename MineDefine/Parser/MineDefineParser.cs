@@ -32,7 +32,7 @@ namespace MineDefine.Parser
 
         public MineDefineAST Parse()
         {
-            GuaranteedMoveNext();
+            Advance();
             var statements = ParseStatements().ToList();
             if(!_tokens.IsEOF) throw new ParsingException("Expected end of file, but not reached");
             return new MineDefineAST(statements);
@@ -76,25 +76,25 @@ namespace MineDefine.Parser
             if (Current.Kind == TokenKind.Operation)
             {
                 shape = ParseBuildShape(Current.Value);
-                GuaranteedMoveNext();
+                Advance();
             }
 
             if (Current.Kind == TokenKind.Dimension)
             {
                 dimension = Dimension.Parse(Current.Value);
-                GuaranteedMoveNext();
+                Advance();
             }
 
             if (Current.Kind == TokenKind.Location)
             {
                 location = Location.Parse(Current.Value);
-                GuaranteedMoveNext();
+                Advance();
             }
 
             if (Current.Kind == TokenKind.Identifier)
             {
                 var ident = Current;
-                GuaranteedMoveNext(TokenKind.EndOfLine);
+                Advance(TokenKind.EndOfLine);
                 _tokens.MoveNext();
                 return new BuildByIdentifier(shape, dimension, location, ident.Value.Substring(1));
             }
@@ -108,8 +108,8 @@ namespace MineDefine.Parser
         private ElementDefinition ParseDefinition()
         {
             var name = Current.Value.Substring(1); //Truncate the @
-            GuaranteedMoveNext(TokenKind.Colon);
-            GuaranteedMoveNext();
+            Advance(TokenKind.Colon);
+            Advance();
             var statements = ParseStatementBlock();
             return new ElementDefinition(name,statements);
         }
@@ -119,7 +119,7 @@ namespace MineDefine.Parser
             IList<IStatement> stats = null;
             if (Current.Kind == TokenKind.OpenBrace)
             {
-                GuaranteedMoveNext();
+                Advance();
                 stats = ParseStatements().ToList();
                 AssertIs(TokenKind.CloseBrace);
                 _tokens.MoveNext();
@@ -152,14 +152,14 @@ namespace MineDefine.Parser
         {
             var transformDir = Current;
             var degree = 1;
-            GuaranteedMoveNext();
+            Advance();
 
             if (Current.Kind == TokenKind.Numeral)
             {
                 if (transformDir.Kind.IsAbsoulteTransformDirection())
                 {
                     degree = int.Parse(Current.Value);
-                    GuaranteedMoveNext();
+                    Advance();
                 }
                 else { throw new ParsingException("Relative transforms may not have numeric offsets"); }
             }
@@ -188,14 +188,14 @@ namespace MineDefine.Parser
             if(kind != Current.Kind) throw new UnexpectedToken(Current,kind);
         }
 
-        private void GuaranteedMoveNext()
+        private void Advance()
         {
             if(!_tokens.MoveNext()) throw new UnexpectedEndOfStream();
         }
 
-        private void GuaranteedMoveNext(TokenKind kind)
+        private void Advance(TokenKind kind)
         {
-            GuaranteedMoveNext();
+            Advance();
             AssertIs(kind);
         }
     }
